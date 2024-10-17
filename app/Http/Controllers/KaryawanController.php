@@ -26,7 +26,6 @@ class KaryawanController extends Controller
             'email' => 'required|email|unique:karyawans,email|max:255',
             'no_handphone' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
-            'jabatan' => 'required|string|max:255',            // Menambahkan validasi Jabatan
             'password' => 'required|min:6',
         ]);
 
@@ -43,7 +42,6 @@ class KaryawanController extends Controller
             'email' => $request->email,
             'no_handphone' => $request->no_handphone,
             'alamat' => $request->alamat,
-            'jabatan' => $request->jabatan,       // Menambahkan Jabatan
             'password' => Hash::make($request->password),
         ]);
 
@@ -71,7 +69,6 @@ class KaryawanController extends Controller
             'email' => 'string|email|max:255|unique:karyawans,email,' . $karyawan->id,
             'no_handphone' => 'string|max:15|nullable',
             'alamat' => 'string|max:255|nullable',
-            'jabatan' => 'string|max:255|nullable',          // Menambahkan validasi Jabatan
             'password' => 'string|min:6|nullable', // Opsional, hanya diupdate jika disediakan
         ]);
 

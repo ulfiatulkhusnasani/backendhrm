@@ -29,10 +29,14 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']), // Hash password
         ]);
 
-        // Kembalikan response sukses
+        // Buat token untuk user baru
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Kembalikan response sukses beserta token
         return response()->json([
             'message' => 'User berhasil didaftarkan',
-            'data' => $user
+            'data' => $user,
+            'token' => $token // Token ditambahkan ke response
         ], 201);
     }
 
@@ -40,18 +44,36 @@ class AuthController extends Controller
      * Login dan menghasilkan token untuk user
      */
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        // Validasi input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if (Auth::attempt($request->only('email', 'password'))) {
-        return response()->json(['message' => 'Login sukses.'], 200);
-    } else {
-        return response()->json(['message' => 'Login gagal.'], 401);
+        // Cek kredensial login
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $user = Auth::user();
+
+            // Ambil token yang sudah ada
+            $existingToken = $user->tokens()->first(); // Mendapatkan token pertama yang sudah ada
+
+            if ($existingToken) {
+                // Gunakan token yang sudah ada
+                $token = $existingToken->plainTextToken;
+            } else {
+                // Jika belum ada token, buat token baru
+                $token = $user->createToken('auth_token')->plainTextToken;
+            }
+
+            return response()->json([
+                'message' => 'Login sukses.',
+                'token' => $token // Pastikan token tidak null
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Login gagal.'], 401);
+        }
     }
-}
 
     /**
      * Menampilkan informasi user yang sedang login
@@ -67,9 +89,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // Menghapus semua token milik user
-        $request->user()->tokens->each(function ($token) {
-            $token->delete();
-        });
+        $request->user()->tokens()->delete();
 
         return response()->json([
             'message' => 'Logout berhasil'

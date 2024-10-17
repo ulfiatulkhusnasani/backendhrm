@@ -16,7 +16,6 @@ class CreateKaryawansTable extends Migration
             $table->string('email')->unique();
             $table->string('no_handphone');
             $table->string('alamat');
-            $table->string('jabatan');         // Menambahkan kolom Jabatan
             $table->string('password');
             $table->timestamps();
         });

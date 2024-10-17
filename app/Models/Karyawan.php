@@ -16,7 +16,6 @@ class Karyawan extends Model
         'email',
         'no_handphone',
         'alamat',
-        'jabatan',         // Menambahkan kolom Jabatan
         'password',
     ];
 }
