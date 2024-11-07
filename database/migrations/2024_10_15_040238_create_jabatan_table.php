@@ -10,7 +10,6 @@ class CreateJabatanTable extends Migration
     {
         Schema::create('jabatan', function (Blueprint $table) {
             $table->id(); // Primary key, id_jabatan
-            $table->string('nama_karyawan'); // Nama karyawan
             $table->string('jabatan'); // Jabatan karyawan
             $table->decimal('gaji_pokok', 10, 2); // Gaji pokok karyawan
             $table->timestamps(); // Timestamps untuk created_at dan updated_at

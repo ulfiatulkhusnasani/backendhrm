@@ -1,10 +1,11 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Absensi;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
@@ -12,7 +13,10 @@ class AbsensiController extends Controller
     public function index()
     {
         try {
-            $absensis = Absensi::all();
+            $absensis = Absensi::all()->map(function ($absensi) {
+                $absensi->tanggal = Carbon::parse($absensi->tanggal)->format('d-m-Y');
+                return $absensi;
+            });
             return response()->json($absensis, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -26,21 +30,28 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'nama' => 'required|string|max:255',
+            // Validasi input
+            $validated = $request->validate([
+                'id_karyawan' => 'required|exists:karyawans,id',
                 'tanggal' => 'required|date',
-                'time_in' => 'nullable|date_format:H:i',
-                'time_out' => 'nullable|date_format:H:i|after:time_in',
-                'status' => 'required|string|in:Terlambat,Tepat waktu',
-            ]);
+                'jam_masuk' => 'required|date_format:H:i',
+                'foto_masuk' => 'required|string', // Ubah ke string jika tidak perlu URL
+                'latitude_masuk' => 'required|numeric',
+                'longitude_masuk' => 'required|numeric',
+                'status' => 'required|string|max:255',
+            ]);            
 
-            $absensi = Absensi::create($validatedData);
+            // Format tanggal untuk disimpan ke database
+            $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
+            $absensi = Absensi::create($validated);
+
+            // Ubah format tanggal sebelum dikirimkan sebagai respons
+            $absensi->tanggal = Carbon::parse($absensi->tanggal)->format('d-m-Y');
 
             return response()->json([
                 'message' => 'Absensi berhasil disimpan',
                 'data' => $absensi
             ], 201);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Data tidak valid',
@@ -59,6 +70,7 @@ class AbsensiController extends Controller
     {
         try {
             $absensi = Absensi::findOrFail($id);
+            $absensi->tanggal = Carbon::parse($absensi->tanggal)->format('d-m-Y');
             return response()->json($absensi, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -75,14 +87,25 @@ class AbsensiController extends Controller
             $absensi = Absensi::findOrFail($id);
 
             $validatedData = $request->validate([
-                'nama' => 'string|max:255',
+                'id_karyawan' => 'exists:karyawans,id',
                 'tanggal' => 'date',
-                'time_in' => 'nullable|date_format:H:i',
-                'time_out' => 'nullable|date_format:H:i|after:time_in',
+                'jam_masuk' => 'nullable|date_format:H:i',
+                'foto_masuk' => 'nullable|string',
+                'latitude_masuk' => 'nullable|numeric',
+                'longitude_masuk' => 'nullable|numeric',
                 'status' => 'string|in:Terlambat,Tepat waktu',
             ]);
 
+            if (isset($validatedData['tanggal'])) {
+                // Format tanggal sebelum update
+                $validatedData['tanggal'] = Carbon::parse($validatedData['tanggal'])->format('Y-m-d');
+            }
+
             $absensi->update($validatedData);
+
+            // Format ulang tanggal untuk respons
+            $absensi->tanggal = Carbon::parse($absensi->tanggal)->format('d-m-Y');
+
             return response()->json([
                 'message' => 'Absensi berhasil diperbarui',
                 'data' => $absensi

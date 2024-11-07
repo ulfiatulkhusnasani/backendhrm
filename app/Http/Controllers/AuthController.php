@@ -30,13 +30,14 @@ class AuthController extends Controller
         ]);
 
         // Buat token untuk user baru
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // $token = $user->createToken('auth_token')->plainTextToken;
+       
 
         // Kembalikan response sukses beserta token
         return response()->json([
             'message' => 'User berhasil didaftarkan',
             'data' => $user,
-            'token' => $token // Token ditambahkan ke response
+            // 'token' => $token // Token ditambahkan ke response
         ], 201);
     }
 
@@ -55,16 +56,7 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
 
-            // Ambil token yang sudah ada
-            $existingToken = $user->tokens()->first(); // Mendapatkan token pertama yang sudah ada
-
-            if ($existingToken) {
-                // Gunakan token yang sudah ada
-                $token = $existingToken->plainTextToken;
-            } else {
-                // Jika belum ada token, buat token baru
-                $token = $user->createToken('auth_token')->plainTextToken;
-            }
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'message' => 'Login sukses.',

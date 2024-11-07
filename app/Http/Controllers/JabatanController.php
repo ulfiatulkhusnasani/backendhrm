@@ -15,29 +15,26 @@ class JabatanController extends Controller
     }
 
     // Menyimpan data jabatan baru
-    // Menyimpan data jabatan baru
     public function store(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'nama_karyawan' => 'required|string',
-        'jabatan' => 'required|string',
-        'gaji_pokok' => 'required|numeric',
-    ]);
+    {
+        // Validasi input
+        $request->validate([
+            'jabatan' => 'required|string',
+            'gaji_pokok' => 'required|numeric',
+        ]);
 
-    // Simpan data jabatan ke database
-    $jabatan = Jabatan::create([
-        'nama_karyawan' => $request->nama_karyawan,
-        'jabatan' => $request->jabatan,
-        'gaji_pokok' => $request->gaji_pokok,
-    ]);
+        // Simpan data jabatan ke database
+        $jabatan = Jabatan::create([
+            'jabatan' => $request->jabatan,
+            'gaji_pokok' => $request->gaji_pokok,
+        ]);
 
-    // Response JSON dengan status 201 Created
-    return response()->json([
-        'message' => 'Jabatan berhasil ditambahkan',
-        'data' => $jabatan
-    ], 201);  // <-- Pastikan statusnya adalah 201
-}
+        // Response JSON dengan status 201 Created
+        return response()->json([
+            'message' => 'Jabatan berhasil ditambahkan',
+            'data' => $jabatan
+        ], 201);
+    }
 
     // Menampilkan data jabatan berdasarkan ID
     public function show($id)
@@ -51,13 +48,12 @@ class JabatanController extends Controller
     {
         // Validasi input
         $request->validate([
-            'nama_karyawan' => 'string|max:255',
             'jabatan' => 'string|max:255',
             'gaji_pokok' => 'numeric|min:0',
         ]);
 
         $jabatan = Jabatan::findOrFail($id);
-        $jabatan->update($request->all());
+        $jabatan->update($request->only('jabatan', 'gaji_pokok'));
 
         return response()->json(['message' => 'Jabatan berhasil diupdate', 'data' => $jabatan]);
     }

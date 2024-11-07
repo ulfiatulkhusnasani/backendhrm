@@ -15,6 +15,7 @@ class Karyawan extends Model
         'nik',             // Menambahkan kolom NIK
         'email',
         'no_handphone',
+        'jabatan',
         'alamat',
         'password',
     ];

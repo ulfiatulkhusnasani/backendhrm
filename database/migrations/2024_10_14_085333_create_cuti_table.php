@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('cuti', function (Blueprint $table) {
             $table->id();
             $table->string('id_karyawan');
-            $table->string('nama_karyawan');
-            $table->string('durasi');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
-            $table->string('keterangan');
+            $table->date('tgl_mulai');
+            $table->date('tgl_selesai');
+            $table->string('alasan'); // Kolom alasan untuk menyimpan alasan cuti
+            $table->string('keterangan'); // Kolom keterangan
+            $table->integer('durasi'); // Durasi dalam hitungan hari
             $table->enum('status', ['disetujui', 'ditolak'])->default('disetujui');
             $table->timestamps();
         });
-    }    
+    }
 
     /**
      * Reverse the migrations.

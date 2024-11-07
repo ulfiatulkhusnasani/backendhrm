@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('absensi', function (Blueprint $table) {
             $table->id(); // Primary Key
-            $table->string('nama'); // Nama Karyawan
+            $table->foreignId('id_karyawan')->constrained('karyawans'); // ID Karyawan dengan foreign key ke tabel karyawans
             $table->date('tanggal'); // Tanggal Absensi
-            $table->time('time_in')->nullable(); // Waktu masuk (null jika belum absen)
-            $table->time('time_out')->nullable(); // Waktu keluar (null jika belum absen keluar)
-            $table->string('status'); // Status Kehadiran (Hadir, Izin, Sakit, Alpa)
-            $table->timestamps(); // Menambahkan kolom created_at dan updated_at
+            $table->time('jam_masuk')->nullable(); // Waktu masuk
+            $table->string('foto_masuk')->nullable(); // URL atau nama file foto masuk
+            $table->decimal('latitude_masuk', 10, 7)->nullable(); // Latitude
+            $table->decimal('longitude_masuk', 10, 7)->nullable(); // Longitude
+            $table->string('status'); // Status Kehadiran (Terlambat, Tepat waktu)
+            $table->timestamps(); // created_at dan updated_at
         });
     }
 
@@ -29,4 +31,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('absensi');
     }
-}; 
+};

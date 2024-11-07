@@ -26,6 +26,7 @@ class KaryawanController extends Controller
             'email' => 'required|email|unique:karyawans,email|max:255',
             'no_handphone' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:100', // Validasi jabatan
             'password' => 'required|min:6',
         ]);
 
@@ -42,6 +43,7 @@ class KaryawanController extends Controller
             'email' => $request->email,
             'no_handphone' => $request->no_handphone,
             'alamat' => $request->alamat,
+            'jabatan' => $request->jabatan,       // Tambahkan jabatan
             'password' => Hash::make($request->password),
         ]);
 
@@ -61,16 +63,16 @@ class KaryawanController extends Controller
     {
         $karyawan = Karyawan::findOrFail($id);
 
-        // Validasi update
         $validated = $request->validate([
             'nama_karyawan' => 'string|max:255|nullable',
-            'nip' => 'string|max:20|unique:karyawans,nip,' . $karyawan->id,   // Ganti nik menjadi nip
-            'nik' => 'string|max:16|unique:karyawans,nik,' . $karyawan->id,  // Menambahkan validasi NIK
+            'nip' => 'digits_between:8,12|unique:karyawans,nip,' . $karyawan->id, // NIP hanya angka 8-12 digit
+            'nik' => 'digits:16|unique:karyawans,nik,' . $karyawan->id, // NIK harus 16 digit
             'email' => 'string|email|max:255|unique:karyawans,email,' . $karyawan->id,
             'no_handphone' => 'string|max:15|nullable',
             'alamat' => 'string|max:255|nullable',
-            'password' => 'string|min:6|nullable', // Opsional, hanya diupdate jika disediakan
-        ]);
+            'jabatan' => 'string|max:100|nullable',
+            'password' => 'string|min:6|nullable',
+        ]);        
 
         // Jika password disediakan, hash password baru
         if ($request->filled('password')) {

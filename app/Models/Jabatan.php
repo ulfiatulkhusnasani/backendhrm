@@ -11,6 +11,5 @@ class Jabatan extends Model
 
     protected $table = 'jabatan'; // Nama tabel di database
 
-    protected $fillable = ['nama_karyawan', 'jabatan', 'gaji_pokok'];
-
+    protected $fillable = ['jabatan', 'gaji_pokok'];
 }

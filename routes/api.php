@@ -8,10 +8,11 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LemburController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\DinasLuarKotaController;
 
 // Rute Publik
 Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::apiResource('absensi', AbsensiController::class);
 Route::resource('jabatan', JabatanController::class);
 
@@ -44,20 +45,22 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rute untuk CutiController
     Route::post('/cuti', [CutiController::class, 'store']);
     Route::get('/cuti', [CutiController::class, 'index']);
-    Route::get('/cuti/{id}', [CutiController::class, 'show']);
+    Route::post('/cuti', [CutiController::class, 'store']);
     Route::put('/cuti/{id}', [CutiController::class, 'update']);
     Route::delete('/cuti/{id}', [CutiController::class, 'destroy']);
 
     // Route Jabatan
     Route::get('/jabatan', [JabatanController::class, 'index']);
-    Route::post('/jabatan', [JabatanController::class, 'store']); // CREATE jabatan
+    Route::post('/jabatan', [JabatanController::class, 'store']);
     Route::get('/jabatan/{id}', [JabatanController::class, 'show']);
     Route::put('/jabatan/{id}', [JabatanController::class, 'update']);
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy']);
 
-    Route::post('/dinasluarkota', [DinasLuarKotaController::class, 'store']);  // CREATE dinas luar kota
-    Route::get('/dinasluarkota', [DinasLuarKotaController::class, 'index']);   // GET all dinas luar kota
-    Route::get('/dinasluarkota/{id}', [DinasLuarKotaController::class, 'show']); // GET specific dinas luar kota
-    Route::put('/dinasluarkota/{id}', [DinasLuarKotaController::class, 'update']); // UPDATE dinas luar kota
-    Route::delete('/dinasluarkota/{id}', [DinasLuarKotaController::class, 'destroy']); // DELETE dinas luar kota
+    Route::prefix('dinas')->group(function () {
+        Route::get('/', [DinasLuarKotaController::class, 'index']);          // Mendapatkan semua data
+        Route::post('/', [DinasLuarKotaController::class, 'store']);         // Menambahkan data baru
+        Route::get('/{id}', [DinasLuarKotaController::class, 'show']);       // Mendapatkan data berdasarkan ID
+        Route::put('/{id}', [DinasLuarKotaController::class, 'update']);     // Memperbarui data berdasarkan ID
+        Route::delete('/{id}', [DinasLuarKotaController::class, 'destroy']); // Menghapus data berdasarkan ID
+    });
 });

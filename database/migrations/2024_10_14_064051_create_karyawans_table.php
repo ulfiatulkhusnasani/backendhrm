@@ -16,6 +16,7 @@ class CreateKaryawansTable extends Migration
             $table->string('email')->unique();
             $table->string('no_handphone');
             $table->string('alamat');
+            $table->string('jabatan');
             $table->string('password');
             $table->timestamps();
         });

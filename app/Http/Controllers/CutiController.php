@@ -14,24 +14,32 @@ class CutiController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'id_karyawan' => 'required',
-        'nama_karyawan' => 'required',
-        'durasi' => 'required',
-        'tanggal_mulai' => 'required|date',
-        'tanggal_selesai' => 'required|date',
-        'keterangan' => 'required',
-        'status' => 'required',
-    ]);
+    {
+        // Validasi input request
+        $request->validate([
+            'id_karyawan' => 'required',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date',
+            'alasan' => 'required|string|max:255',
+            'keterangan' => 'required|string|max:255',
+            'durasi' => 'required|numeric',
+            'status' => 'required|in:disetujui,ditolak',
+        ]);
 
-    $cuti = Cuti::create($request->all());
+        // Menghitung durasi secara otomatis jika tidak diberikan
+        if (!$request->has('durasi')) {
+            $request->merge([
+                'durasi' => (new \Carbon\Carbon($request->tgl_selesai))->diffInDays(new \Carbon\Carbon($request->tgl_mulai)) + 1
+            ]);
+        }
 
-    return response()->json([
-        'message' => 'Cuti berhasil ditambahkan.',
-        'data' => $cuti
-    ], 201);
-}
+        $cuti = Cuti::create($request->all());
+
+        return response()->json([
+            'message' => 'Cuti berhasil ditambahkan.',
+            'data' => $cuti
+        ], 201);
+    }
 
     public function show($id)
     {
@@ -45,15 +53,23 @@ class CutiController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Validasi input request
         $request->validate([
             'id_karyawan' => 'required',
-            'nama_karyawan' => 'required',
-            'durasi' => 'required',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date',
-            'keterangan' => 'required',
-            'status' => 'required',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date',
+            'alasan' => 'required|string|max:255',
+            'keterangan' => 'required|string|max:255',
+            'durasi' => 'required|numeric',
+            'status' => 'required|in:disetujui,ditolak',
         ]);
+
+        // Menghitung durasi secara otomatis jika tidak diberikan
+        if (!$request->has('durasi')) {
+            $request->merge([
+                'durasi' => (new \Carbon\Carbon($request->tgl_selesai))->diffInDays(new \Carbon\Carbon($request->tgl_mulai)) + 1
+            ]);
+        }
 
         $cuti = Cuti::find($id);
         if ($cuti) {
