@@ -22,25 +22,22 @@ class DinasLuarKota extends Model
 
     public $timestamps = true;
 
-    // Accessor untuk memformat biaya transport
+    // Accessors untuk memformat atribut ke dalam format rupiah
     public function getBiayaTransportAttribute($value)
     {
         return 'Rp ' . number_format($value, 2, ',', '.');
     }
 
-    // Accessor untuk memformat biaya penginapan
     public function getBiayaPenginapanAttribute($value)
     {
         return 'Rp ' . number_format($value, 2, ',', '.');
     }
 
-    // Accessor untuk memformat uang harian
     public function getUangHarianAttribute($value)
     {
         return 'Rp ' . number_format($value, 2, ',', '.');
     }
 
-    // Accessor untuk memformat total biaya
     public function getTotalBiayaAttribute($value)
     {
         return 'Rp ' . number_format($value, 2, ',', '.');

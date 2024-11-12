@@ -56,11 +56,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/jabatan/{id}', [JabatanController::class, 'update']);
     Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy']);
 
-    Route::prefix('dinas')->group(function () {
-        Route::get('/', [DinasLuarKotaController::class, 'index']);          // Mendapatkan semua data
-        Route::post('/', [DinasLuarKotaController::class, 'store']);         // Menambahkan data baru
-        Route::get('/{id}', [DinasLuarKotaController::class, 'show']);       // Mendapatkan data berdasarkan ID
-        Route::put('/{id}', [DinasLuarKotaController::class, 'update']);     // Memperbarui data berdasarkan ID
-        Route::delete('/{id}', [DinasLuarKotaController::class, 'destroy']); // Menghapus data berdasarkan ID
+    Route::prefix('dinas_luarkota')->group(function () {
+        Route::get('/', [DinasLuarKotaController::class, 'index']);
+        Route::post('/', [DinasLuarKotaController::class, 'store']);
+        Route::get('{id}', [DinasLuarKotaController::class, 'show']);
+        Route::put('{id}', [DinasLuarKotaController::class, 'update']);
+        Route::delete('{id}', [DinasLuarKotaController::class, 'destroy']);
     });
 });

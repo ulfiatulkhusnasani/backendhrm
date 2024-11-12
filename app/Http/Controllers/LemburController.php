@@ -53,7 +53,7 @@ class LemburController extends Controller
     {
         // Konversi jam lembur yang diinput menjadi timestamp
         $lemburStart = strtotime($jamLembur);
-        $lemburEnd = strtotime('20:00:00'); // Misalkan lembur dihitung setelah jam 20:00
+        $lemburEnd = strtotime('17:00:00'); // Misalkan lembur dihitung setelah jam 17:00
 
         // Jika jam lembur lebih awal dari jam lembur standar, kita anggap tidak ada jam lembur
         if ($lemburStart < $lemburEnd) {

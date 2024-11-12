@@ -39,7 +39,7 @@ class AbsensiController extends Controller
                 'latitude_masuk' => 'required|numeric',
                 'longitude_masuk' => 'required|numeric',
                 'status' => 'required|string|max:255',
-            ]);            
+            ]);       
 
             // Format tanggal untuk disimpan ke database
             $validated['tanggal'] = Carbon::parse($validated['tanggal'])->format('Y-m-d');
